@@ -23,7 +23,7 @@ If something doesn’t work, please [file an issue](https://github.com/VasilyShe
 ## Quick Overview
 
 ```sh
-npx create-react-app my-browser-extension --scripts-version react-browser-extension-scripts
+npx create-react-app my-browser-extension --scripts-version react-browser-extension-scripts --template browser-extension
 cd my-browser-extension
 npm start
 ```
