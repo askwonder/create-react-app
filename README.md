@@ -1,19 +1,33 @@
-# Create React App [![Build Status](https://dev.azure.com/facebook/create-react-app/_apis/build/status/facebook.create-react-app?branchName=master)](https://dev.azure.com/facebook/create-react-app/_build/latest?definitionId=1&branchName=master) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/facebook/create-react-app/blob/master/CONTRIBUTING.md)
+# Create-React-Extension [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/VasilyShelkov/create-react-extension/pulls)
 
-Create React apps with no build configuration.
+Create React browser extensions with no build configuration.
 
-- [Creating an App](#creating-an-app) – How to create a new app.
-- [User Guide](https://facebook.github.io/create-react-app/) – How to develop apps bootstrapped with Create React App.
+This is a fork of [create-react-app](https://github.com/facebook/create-react-app) to make creating Browser Extensions in React more accessible and following
+[Create-React-App's(CRA) philosophy](https://github.com/facebook/create-react-app#philosophy), especially **convention over configuration**.
 
 Create React App works on macOS, Windows, and Linux.<br>
 If something doesn’t work, please [file an issue](https://github.com/facebook/create-react-app/issues/new).<br>
 If you have questions or need help, please ask in [GitHub Discussions](https://github.com/facebook/create-react-app/discussions).
+## Features
+
+- [x] [Same CRA Developer Experience](https://github.com/facebook/create-react-app#whats-included) for your browser extension projects (~~service worker functionality~~)
+- [x] [Webpack dev server](https://github.com/webpack/webpack-dev-server) hot reloads extension on changes (NOTE: contentScript hot reloading not supported)
+- [x] [Supports any combination of background, content and popup chrome extensions](#only-1-new-convention)
+- [x] [Automated fork watcher](https://github.com/wei/pull) to stay updated with the original CRA
+- [ ] Add support for [automated deployments](https://github.com/LinusU/wext-shipit) and docs to help users with what to do after having built their extension.
+- [ ] Add e2e test suite similar to the [original CRA](https://github.com/facebook/create-react-app/tree/master/test) and run with automated pipeline.
+- [ ] Add some kind of dependency watcher (e.g. [greenkeeper](https://greenkeeper.io/)) to stay up to date with the dependencies that are not managed by CRA
+
+see [Create a browser extension](#creating-a-browser-extension) for a more in depth start guide
+see [CRA user guide](https://facebook.github.io/create-react-app/) for more information on different configurations and functionality available.
+
+If something doesn’t work, please [file an issue](https://github.com/VasilyShelkov/create-react-extension/issues/new).
 
 ## Quick Overview
 
 ```sh
-npx create-react-app my-app
-cd my-app
+npx create-react-app my-browser-extension --scripts-version react-browser-extension-scripts --template browser-extension
+cd my-browser-extension
 npm start
 ```
 
@@ -21,30 +35,41 @@ If you've previously installed `create-react-app` globally via `npm install -g c
 
 _([npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) comes with npm 5.2+ and higher, see [instructions for older npm versions](https://gist.github.com/gaearon/4064d3c23a77c74a3614c498a8bb1c5f))_
 
-Then open [http://localhost:3000/](http://localhost:3000/) to see your app.<br>
-When you’re ready to deploy to production, create a minified bundle with `npm run build`.
+Then open Chrome, and unpack the newly created `/dev` folder to see your extension added locally to your browser.<br>
+When you’re ready to ship your extension, create an optimized build with `npm run build`.
 
 <p align='center'>
 <img src='https://cdn.jsdelivr.net/gh/facebook/create-react-app@27b42ac7efa018f2541153ab30d63180f5fa39e0/screencast.svg' width='600' alt='npm start'>
 </p>
 
-### Get Started Immediately
+## What's do I need to know to start building my extension ?
 
-You **don’t** need to install or configure tools like webpack or Babel.<br>
-They are preconfigured and hidden so that you can focus on the code.
+It's follows mostly the [same conventions as CRA](https://github.com/facebook/create-react-app#get-started-immediately).
 
-Create a project, and you’re good to go.
+### Only 1 new convention
 
-## Creating an App
+There are [different types of chrome extensions](https://developer.chrome.com/extensions/getstarted) which can be any combination of:
+
+- [Popup UI](https://developer.chrome.com/extensions/user_interface#popup) which renders your `index.js` when you click on your extension in the browser extension icon.
+- [Background script](https://developer.chrome.com/extensions/background_pages) which will run in the background from `/background/index.js` and can be use for things like [state-management](https://github.com/tshaddix/webext-redux).
+- [Content script](https://developer.chrome.com/extensions/content_scripts) from `/contentScript/index.js` which will run on configured web pages
+- [Options UI](https://developer.chrome.com/extensions/options) :negative_squared_cross_mark: Does not support yet
+- [Dev tools page](https://developer.chrome.com/extensions/devtools) :negative_squared_cross_mark: Does not support yet
+
+These are all controlled by the all important [`/public/manifest.json`](https://github.com/VasilyShelkov/create-react-extension/blob/master/packages/react-scripts/template/public/manifest.json) which is [configurable](https://developer.chrome.com/extensions/manifest) by you to control what kind of extension you want build.
+
+**Do not delete any of the entry files, this is a convention to remind you what your extensions could be. The build will notify you and fail if you remove any of these important files.**
+
+## Creating a Browser Extension
 
 **You’ll need to have Node 8.16.0 or Node 10.16.0 or later version on your local development machine** (but it’s not required on the server). You can use [nvm](https://github.com/creationix/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
-To create a new app, you may choose one of the following methods:
+To create a new Browser Extension, you may choose one of the following methods:
 
 ### npx
 
 ```sh
-npx create-react-app my-app
+npx create-react-app my-browser-extension --scripts-version react-browser-extension-scripts --template browser-extension
 ```
 
 _([npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) is a package runner tool that comes with npm 5.2+ and higher, see [instructions for older npm versions](https://gist.github.com/gaearon/4064d3c23a77c74a3614c498a8bb1c5f))_
@@ -52,7 +77,7 @@ _([npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7
 ### npm
 
 ```sh
-npm init react-app my-app
+npm init react-app my-browser-extension --scripts-version react-browser-extension-scripts --template browser-extension
 ```
 
 _`npm init <initializer>` is available in npm 6+_
@@ -60,62 +85,63 @@ _`npm init <initializer>` is available in npm 6+_
 ### Yarn
 
 ```sh
-yarn create react-app my-app
+yarn create react-app my-browser-extension --scripts-version react-browser-extension-scripts --template browser-extension
 ```
 
 _[`yarn create <starter-kit-package>`](https://yarnpkg.com/lang/en/docs/cli/create/) is available in Yarn 0.25+_
 
-It will create a directory called `my-app` inside the current folder.<br>
+It will create a directory called `my-browser-extension` inside the current folder.<br>
 Inside that directory, it will generate the initial project structure and install the transitive dependencies:
 
 ```
-my-app
+my-browser-extension
 ├── README.md
 ├── node_modules
 ├── package.json
 ├── .gitignore
 ├── public
-│   ├── favicon.ico
-│   ├── index.html
+│   ├── img
+│   │   ├── icon-16.png
+│   │   ├── icon-48.png
+│   │   ├── icon-128.png
+│   ├── popup.html
 │   └── manifest.json
 └── src
+    ├── background
+    │   ├── index.js
+    ├── contentScripts
+    │   ├── index.js
     ├── App.css
     ├── App.js
     ├── App.test.js
     ├── index.css
     ├── index.js
     ├── logo.svg
-    └── serviceWorker.js
-    └── setupTests.js
 ```
 
-No configuration or complicated folder structures, only the files you need to build your app.<br>
+No configuration or complicated folder structures, only the files you need to build your extension.<br>
 Once the installation is done, you can open your project folder:
 
 ```sh
-cd my-app
+cd my-browser-extension
 ```
 
 Inside the newly created project, you can run some built-in commands:
 
 ### `npm start` or `yarn start`
 
-Runs the app in development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Runs the browser extension in development mode. You will see a `/dev` folder has been created in your project with the extension.<br>
 
-The page will automatically reload if you make changes to the code.<br>
+To view the extension in your browser, [open up chrome and unpack extension](https://developer.chrome.com/extensions/getstarted#manifest).
+
+The extension will automatically reload if you make changes to the code.<br>
 You will see the build errors and lint warnings in the console.
 
 <p align='center'>
 <img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
 </p>
 
-### `npm test` or `yarn test`
-
-Runs the test watcher in an interactive mode.<br>
-By default, runs tests related to files changed since the last commit.
-
-[Read more about testing.](https://facebook.github.io/create-react-app/docs/running-tests)
+### [`npm test` or `yarn test`](https://github.com/facebook/create-react-app#npm-test-or-yarn-test)
 
 ### `npm run build` or `yarn build`
 
@@ -140,7 +166,7 @@ Please refer to the [User Guide](https://facebook.github.io/create-react-app/doc
 
 - **No Configuration Required:** You don't need to configure anything. A reasonably good configuration of both development and production builds is handled for you so you can focus on writing code.
 
-- **No Lock-In:** You can “eject” to a custom setup at any time. Run a single command, and all the configuration and build dependencies will be moved directly into your project, so you can pick up right where you left off.
+### [`npm run eject` or `yarn eject`](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject)
 
 ## What’s Included?
 
@@ -159,56 +185,21 @@ Check out [this guide](https://github.com/nitishdayal/cra_closer_look) for an ov
 
 The tradeoff is that **these tools are preconfigured to work in a specific way**. If your project needs more customization, you can ["eject"](https://facebook.github.io/create-react-app/docs/available-scripts#npm-run-eject) and customize it, but then you will need to maintain this configuration.
 
-## Popular Alternatives
-
-Create React App is a great fit for:
-
-- **Learning React** in a comfortable and feature-rich development environment.
-- **Starting new single-page React applications.**
-- **Creating examples** with React for your libraries and components.
-
-Here are a few common cases where you might want to try something else:
-
-- If you want to **try React** without hundreds of transitive build tool dependencies, consider [using a single HTML file or an online sandbox instead](https://reactjs.org/docs/try-react.html).
-
-- If you need to **integrate React code with a server-side template framework** like Rails, Django or Symfony, or if you’re **not building a single-page app**, consider using [nwb](https://github.com/insin/nwb), or [Neutrino](https://neutrino.js.org/) which are more flexible. For Rails specifically, you can use [Rails Webpacker](https://github.com/rails/webpacker). For Symfony, try [Symfony's webpack Encore](https://symfony.com/doc/current/frontend/encore/reactjs.html).
-
-- If you need to **publish a React component**, [nwb](https://github.com/insin/nwb) can [also do this](https://github.com/insin/nwb#react-components-and-libraries), as well as [Neutrino's react-components preset](https://neutrino.js.org/packages/react-components/).
-
-- If you want to do **server rendering** with React and Node.js, check out [Next.js](https://github.com/zeit/next.js/) or [Razzle](https://github.com/jaredpalmer/razzle). Create React App is agnostic of the backend, and only produces static HTML/JS/CSS bundles.
-
-- If your website is **mostly static** (for example, a portfolio or a blog), consider using [Gatsby](https://www.gatsbyjs.org/) instead. Unlike Create React App, it pre-renders the website into HTML at the build time.
-
-- Finally, if you need **more customization**, check out [Neutrino](https://neutrino.js.org/) and its [React preset](https://neutrino.js.org/packages/react/).
-
-All of the above tools can work with little to no configuration.
-
-If you prefer configuring the build yourself, [follow this guide](https://reactjs.org/docs/add-react-to-an-existing-app.html).
-
-## React Native
-
-Looking for something similar, but for React Native?<br>
-Check out [Expo CLI](https://github.com/expo/expo-cli).
+## Check out [this awesome browser extensions list](https://github.com/fregante/Awesome-WebExtensions) for more great packages to help you create a great web extension
 
 ## Contributing
 
-We'd love to have your helping hand on `create-react-app`! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on what we're looking for and how to get started.
-
-## Credits
-
-This project exists thanks to all the people who [contribute](CONTRIBUTING.md).<br>
-<a href="https://github.com/facebook/create-react-app/graphs/contributors"><img src="https://opencollective.com/create-react-app/contributors.svg?width=890&button=false" /></a>
-
-Thanks to [Netlify](https://www.netlify.com/) for hosting our documentation.
+We'd love to have your helping hand on `create-react-extension`! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on what we're looking for and how to get started.
 
 ## Acknowledgements
 
-We are grateful to the authors of existing related projects for their ideas and collaboration:
+We are grateful to everyone who has been a part of the following existing related projects for their ideas and collaboration:
 
-- [@eanplatter](https://github.com/eanplatter)
-- [@insin](https://github.com/insin)
-- [@mxstbr](https://github.com/mxstbr)
+- [Create-React-App](https://github.com/facebook/create-react-app)
+- [How to Fork CRA Post](https://codeburst.io/customizing-create-react-app-done-right-4a22683f2e09) to help me create this successfully
+- [React-chrome-extension-boilerplate](https://github.com/jhen0409/react-chrome-extension-boilerplate) and [create-chrome-extension](https://github.com/schovi/create-chrome-extension), both of unfortunately don't look like they're actively supported, but have been inspiration and shown an appetite for building extensions in the community.
+- I have no doubt this will grow as the project grows.
 
 ## License
 
-Create React App is open source software [licensed as MIT](https://github.com/facebook/create-react-app/blob/master/LICENSE).
+Create React Extension is open source software [licensed as MIT](https://github.com/VasilyShelkov/create-react-extension/blob/master/LICENSE).

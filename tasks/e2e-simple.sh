@@ -95,6 +95,7 @@ startLocalRegistry "$root_path"/tasks/verdaccio.yaml
 ./node_modules/.bin/eslint --max-warnings 0 packages/react-dev-utils/
 ./node_modules/.bin/eslint --max-warnings 0 packages/react-error-overlay/src/
 ./node_modules/.bin/eslint --max-warnings 0 packages/react-scripts/
+./node_modules/.bin/eslint --max-warnings 0 packages/react-error-overlay/src/
 
 cd packages/react-error-overlay/
 yarn test
